@@ -107,8 +107,8 @@ if __name__ == '__main__':
     #chrome_service = Service(chrome_driver)
     driver = webdriver.Chrome(executable_path=chrome_driver)
     mainDF = pd.DataFrame(columns=["first_batting","second_batting","ground_name","ball_number", "current_ball_run","chasing_team_won"])
-    commentaryUrls = ["https://www.espncricinfo.com/series/ipl-2019-1165643/chennai-super-kings-vs-royal-challengers-bangalore-1st-match-1175356/ball-by-ball-commentary"
-                      ,"https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-sunrisers-hyderabad-qualifier-2-1237180/ball-by-ball-commentary"]
+    commentaryUrls = ["https://www.espncricinfo.com/series/ipl-2019-1165643/chennai-super-kings-vs-royal-challengers-bangalore-1st-match-1175356/ball-by-ball-commentary"]
+                      #,"https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-sunrisers-hyderabad-qualifier-2-1237180/ball-by-ball-commentary"
     #commentaryUrls = geturls()
     for url in commentaryUrls:
         commentary = getMatchCommentary(url)
