@@ -113,10 +113,11 @@ if __name__ == '__main__':
     #commentaryUrls = geturls()
     for url in commentaryUrls:
         commentary = getMatchCommentary(url)
+        #reverse the index sorting and reset_index so that first ball has index 0 for easier calculation of wickets remaining and total runs
+        #basically the dataframe is reversed and index is reset to new order(ie 120 becomes 0, 0 becomes 120)
         commentary = commentary.reindex(index=commentary.index[::-1])
         processed_comm = process_data(commentary.reset_index(drop=True))
         mainDF = pd.concat([mainDF, processed_comm], axis=0)
-        #mainDF = mainDF.reindex(index=mainDF.index[::-1])
     driver.quit()
     mainDF.to_csv(r'data\commentary_data_final.csv', index = None, header=True)
 
