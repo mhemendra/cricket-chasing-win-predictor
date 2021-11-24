@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import pandas as pd
 from selenium import webdriver
+from ProcessData import process_data
 
 def geturls():
     #homepage = 'https://www.espncricinfo.com/series/ipl-2020-21-1210595/match-results'
@@ -106,12 +107,16 @@ if __name__ == '__main__':
     chrome_driver = r'D:\Downloads\chromedriver\chromedriver.exe'
     #chrome_service = Service(chrome_driver)
     driver = webdriver.Chrome(executable_path=chrome_driver)
-    mainDF = pd.DataFrame(columns=["first_batting","second_batting","ground_name","ball_number", "current_ball_run","chasing_team_won"])
+    mainDF = pd.DataFrame(columns=["first_batting","second_batting","ground_name","ball_number", "current_ball_run","chasing_team_won","cumulative_runs","wickets_remaining"])
     commentaryUrls = ["https://www.espncricinfo.com/series/ipl-2019-1165643/chennai-super-kings-vs-royal-challengers-bangalore-1st-match-1175356/ball-by-ball-commentary"]
                       #,"https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-sunrisers-hyderabad-qualifier-2-1237180/ball-by-ball-commentary"
     #commentaryUrls = geturls()
     for url in commentaryUrls:
         commentary = getMatchCommentary(url)
-        mainDF = pd.concat([mainDF, commentary], axis=0)
+        commentary = commentary.reindex(index=commentary.index[::-1])
+        processed_comm = process_data(commentary.reset_index(drop=True))
+        mainDF = pd.concat([mainDF, processed_comm], axis=0)
+        #mainDF = mainDF.reindex(index=mainDF.index[::-1])
     driver.quit()
-    mainDF.to_csv(r'data\commentary_data.csv', index = None, header=True)
+    mainDF.to_csv(r'data\commentary_data_final.csv', index = None, header=True)
+
