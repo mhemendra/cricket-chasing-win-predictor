@@ -18,7 +18,8 @@ def process_data(input):
 
     #for each ball add the scores of balls before it
     input['cumulative_runs'] = input['current_ball_run'].cumsum(axis=0)
-
+    input['fraction_of_target'] = input['cumulative_runs'] / input['target']
+    input['fraction_of_target'] = input['fraction_of_target'].round(decimals= 3)
     """with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(input['cumulative_runs'])"""
 

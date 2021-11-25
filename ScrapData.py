@@ -21,26 +21,30 @@ def geturls():
 
 def process_short(short_text):
     short = short_text.split(",")[1]
-    #as no ball will lead to 0, but it should be 1 for this alone is startswith
-    if short.startswith(" no"):
-        return 0
+    runs = 0
+    #no ball by default is 1 run, and if anymore of the ball were scored it will be added
+    if "no ball" in short:
+        runs += 1
+    #Commented as  its default
+    #if short.startswith(" no run"):
+        #pass
     if "1" in short:
-        return 1
+        runs += 1
     elif "2" in short:
-        return 2
+        runs += 2
     elif "3" in short:
-        return 3
+        runs += 3
     elif "4" in short:
-        return 4
+        runs += 4
     elif "FOUR" in short:
-        return 4
+        runs += 4
     elif "5" in short:
-        return 5
+        runs += 5
     elif "6" in short:
-        return 6
+        runs += 6
     elif "SIX" in short:
-        return 6
-    return short
+        runs += 6
+    return runs
 
 def convert_pd(driver):
     SCROLL_PAUSE_TIME = 0.5
@@ -63,6 +67,7 @@ def convert_pd(driver):
     team_scores = teams.findAll(class_='score')
     team_scores = [name.text.split('/')[0] for name in team_scores]
     chasing_team_won = 1 if team_scores[1] > team_scores[0] else 0
+    target = int(team_scores[0]) + 1
     header_info = soup.find(class_='header-info').find(class_='description').text
     ground_name = header_info.split(",")[1]
     comments = soup.find(class_='match-body').findAll(class_='match-comment')
@@ -86,6 +91,7 @@ def convert_pd(driver):
         "ground_name": ground_name,
         "ball_number":balls_remaining,
         "current_ball_run":short_texts,
+        "target":target,
         "chasing_team_won": chasing_team_won,
         #"short_test":short_texts_test,
     })
@@ -107,7 +113,7 @@ if __name__ == '__main__':
     chrome_driver = r'D:\Downloads\chromedriver\chromedriver.exe'
     #chrome_service = Service(chrome_driver)
     driver = webdriver.Chrome(executable_path=chrome_driver)
-    mainDF = pd.DataFrame(columns=["first_batting","second_batting","ground_name","ball_number", "current_ball_run","chasing_team_won","cumulative_runs","wickets_remaining"])
+    mainDF = pd.DataFrame()
     commentaryUrls = ["https://www.espncricinfo.com/series/ipl-2019-1165643/chennai-super-kings-vs-royal-challengers-bangalore-1st-match-1175356/ball-by-ball-commentary"]
                       #,"https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-sunrisers-hyderabad-qualifier-2-1237180/ball-by-ball-commentary"
     #commentaryUrls = geturls()
